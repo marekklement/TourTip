@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:13.4
+    volumes:
+      - postgres_data:/var/lib/postgres/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: tipdb
+      POSTGRES_USER: tipdb
+      POSTGRES_PASSWORD: tipdb
+volumes:
+  postgres_data:
