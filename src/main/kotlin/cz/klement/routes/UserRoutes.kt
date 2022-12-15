@@ -1,9 +1,13 @@
 package cz.klement.routes
 
-import cz.klement.model.command.UserCreateCommand
+import cz.klement.extensions.toUUID
+import cz.klement.mapper.command.mapCommand
+import cz.klement.mapper.response.mapResponse
+import cz.klement.model.request.UserCreateRequest
 import cz.klement.service.api.UserService
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.plugins.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -15,14 +19,25 @@ fun Route.users() {
   val userService by closestDI().instance<UserService>()
 
   get("users") {
-    val users = userService.findAll()
-    call.respond(users)
+    userService.findAll().map{
+      it.mapResponse()
+    }.also {
+      call.respond(it)
+    }
   }
 
   post("user") {
-    call.receive<UserCreateCommand>().run {
-      userService.register(this)
-      call.respond(HttpStatusCode.Accepted)
+    call.receive<UserCreateRequest>().mapCommand()
+      .run(userService::register)
+      .also {
+        call.respond(HttpStatusCode.Accepted)
+      }
+  }
+
+  delete("user/{id}") {
+    val id = call.parameters["id"]?.toUUID() ?: throw BadRequestException("Id was not provided in a path!")
+    userService.delete(id).also {
+      call.respond(HttpStatusCode.OK)
     }
   }
 }

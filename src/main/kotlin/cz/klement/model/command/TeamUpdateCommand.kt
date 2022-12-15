@@ -1,6 +1,8 @@
 package cz.klement.model.command
 
+import java.util.*
+
 data class TeamUpdateCommand(
-  val id: Int,
+  val id: UUID,
   val name: String?
 )

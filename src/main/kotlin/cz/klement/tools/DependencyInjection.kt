@@ -6,6 +6,6 @@ import org.kodein.di.DI
 import org.kodein.di.bind
 import org.kodein.di.singleton
 
-fun DI.MainBuilder.initServices() {
+fun DI.MainBuilder.initInjections() {
   bind<UserService>() with singleton { UserServiceImpl() }
 }

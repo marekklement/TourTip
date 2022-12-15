@@ -1,13 +1,14 @@
-package cz.klement.dao
+package cz.klement.tables.dao
 
 import cz.klement.model.command.TeamCreateCommand
 import cz.klement.model.command.TeamUpdateCommand
-import cz.klement.model.dto.Team
+import cz.klement.tables.Team
+import java.util.*
 
 interface TeamsDao {
-  fun get(teamId: Int): Team?
+  fun get(teamId: UUID): Team?
   fun findAll(): List<Team>
-  fun create(command: TeamCreateCommand): Int
+  fun create(command: TeamCreateCommand): UUID
   fun edit(command: TeamUpdateCommand): Team?
-  fun delete(teamId: Int): Boolean
+  fun delete(teamId: UUID): Boolean
 }

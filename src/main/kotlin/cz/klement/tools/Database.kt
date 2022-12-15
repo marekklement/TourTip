@@ -1,14 +1,19 @@
 package cz.klement.tools
 
+import cz.klement.extensions.*
+import io.ktor.server.application.*
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.transactions.transaction
 
-fun configureDatabase() {
+fun Application.configureDatabase() {
+  val config = environment.config
+  Database.connect(config.getDbUrl(), driver = config.getDbDriver(), user = config.getDbUser(), password = config.getDbUserPwd())
   val flyway = Flyway.configure()
-    .dataSource("jdbc:postgresql://localhost:5432/tipdb", "tipdb", "tipdb")
-    .locations("filesystem:src/main/resources/db/migration")
+    .dataSource(config.getDbUrl(), config.getDbUser(), config.getDbUserPwd())
+    .locations(config.getFlywayDir())
     .load()
-  flyway.migrate()
-
-  Database.connect("jdbc:postgresql://localhost:5432/tipdb", driver = "org.postgresql.Driver", user = "tipdb", password = "tipdb")
+  transaction {
+    flyway.migrate()
+  }
 }

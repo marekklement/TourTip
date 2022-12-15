@@ -1,19 +1,21 @@
 package cz.klement.plugins
 
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.plugins.contentnegotiation.*
+import cz.klement.serialization.InstantAdapter
+import io.ktor.serialization.gson.*
 import io.ktor.server.application.*
-import io.ktor.server.response.*
+import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
+import java.time.Instant
 
 fun Application.configureSerialization() {
   install(ContentNegotiation) {
-    json()
+    gson {
+      setPrettyPrinting()
+      disableHtmlEscaping()
+      registerTypeAdapter(Instant::class.java, InstantAdapter)
+    }
   }
 
   routing {
-    get("/json/kotlinx-serialization") {
-      call.respond(mapOf("hello" to "world"))
-    }
   }
 }

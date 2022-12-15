@@ -1,10 +1,8 @@
-package cz.klement.model.command
+package cz.klement.model.request
 
-import java.util.*
-
-data class UserUpdateCommand(
-  val id: UUID,
+data class UserCreateRequest(
   val username: String?,
+  val password: String?,
   val email: String?,
   val firstName: String?,
   val lastName: String?

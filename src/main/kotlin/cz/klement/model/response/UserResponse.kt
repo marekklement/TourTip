@@ -1,9 +1,10 @@
-package cz.klement.model.dto
+package cz.klement.model.response
 
 import java.time.Instant
+import java.util.*
 
-data class User(
-  val id: Int,
+data class UserResponse(
+  val id: UUID,
   val username: String,
   val password: String,
   val email: String,
@@ -12,4 +13,3 @@ data class User(
   val createdAt: Instant,
   val updatedAt: Instant
 )
-

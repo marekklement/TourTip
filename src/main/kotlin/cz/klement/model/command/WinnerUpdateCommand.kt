@@ -1,8 +1,10 @@
 package cz.klement.model.command
 
+import java.util.*
+
 data class WinnerUpdateCommand(
-  val id: Int,
-  val userId: Int?,
-  val tournamentId: Int?,
+  val id: UUID,
+  val userId: UUID?,
+  val tournamentId: UUID?,
   val points: Int?,
 )
