@@ -1,13 +1,12 @@
 package cz.klement.plugins
 
 import cz.klement.routes.API_PREFIX
-import cz.klement.routes.users
+import cz.klement.routes.basic.users
 import cz.klement.routes.usersAdmin
 import cz.klement.routes.usersAuth
-import cz.klement.tools.ADMIN_AUTH
-import cz.klement.tools.USER_AUTH
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.plugins.swagger.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
@@ -29,5 +28,6 @@ fun Application.configureRouting() {
         usersAdmin()
       }
     }
+    swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
   }
 }

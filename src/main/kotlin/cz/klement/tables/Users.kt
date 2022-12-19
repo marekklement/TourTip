@@ -57,7 +57,6 @@ object Users : TableBase("users"), UsersDao {
     }
   }
 
-
   override fun edit(command: UserUpdateCommand) = transaction {
     update({ Users.id eq command.id }) { user ->
       command.email?.let { user[email] = it }
@@ -68,7 +67,6 @@ object Users : TableBase("users"), UsersDao {
       get(command.id)
     }
   }
-
 
   override fun delete(userId: UUID) = transaction {
     deleteWhere { (id eq userId) } > 0

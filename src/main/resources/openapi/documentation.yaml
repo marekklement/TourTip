@@ -1,0 +1,224 @@
+openapi: "3.0.3"
+info:
+  title: "TourTip API"
+  description: "TourTip API"
+  version: "1.0.0"
+servers:
+- url: "https://localhost:8080"
+paths:
+  /:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Welcome to Tournament Tip app!"
+  /api/v1/users:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+    post:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/users/{id}:
+    delete:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/User"
+    put:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+  /api/v1/users/{id}/pwd-change:
+    put:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+  /api/v1/users/login:
+    post:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/HashMap"
+components:
+  schemas:
+    Table:
+      type: "object"
+      properties:
+        tableName:
+          type: "string"
+        primaryKey:
+          $ref: "#/components/schemas/PrimaryKey"
+    IColumnType:
+      type: "object"
+      properties: {}
+    Map:
+      type: "object"
+      properties: {}
+    LinkedHashSet:
+      type: "object"
+      properties: {}
+    ForeignKeyConstraint:
+      type: "object"
+      properties:
+        references:
+          $ref: "#/components/schemas/Map"
+        target:
+          $ref: "#/components/schemas/LinkedHashSet"
+        targetTable:
+          $ref: "#/components/schemas/Table"
+        from:
+          $ref: "#/components/schemas/LinkedHashSet"
+        fromTable:
+          $ref: "#/components/schemas/Table"
+    Function0:
+      type: "object"
+      properties: {}
+    Column:
+      type: "object"
+      properties:
+        table:
+          $ref: "#/components/schemas/Table"
+        name:
+          type: "string"
+        columnType:
+          $ref: "#/components/schemas/IColumnType"
+        foreignKey:
+          $ref: "#/components/schemas/ForeignKeyConstraint"
+        defaultValueFun:
+          $ref: "#/components/schemas/Function0"
+    PrimaryKey:
+      type: "object"
+      properties:
+        columns:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Column"
+    IdTable:
+      type: "object"
+      properties:
+        tableName:
+          type: "string"
+        primaryKey:
+          $ref: "#/components/schemas/PrimaryKey"
+    Object:
+      type: "object"
+      properties: {}
+    EntityID:
+      type: "object"
+      properties:
+        table:
+          $ref: "#/components/schemas/IdTable"
+        _value:
+          $ref: "#/components/schemas/Object"
+    LinkedHashMap:
+      type: "object"
+      properties: {}
+    ResultRow:
+      type: "object"
+      properties:
+        fieldIndex:
+          $ref: "#/components/schemas/Map"
+    User:
+      type: "object"
+      properties:
+        id:
+          $ref: "#/components/schemas/EntityID"
+        writeValues:
+          $ref: "#/components/schemas/LinkedHashMap"
+        _readValues:
+          $ref: "#/components/schemas/ResultRow"
+    Instant:
+      type: "object"
+      properties: {}
+    UserResponse:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        username:
+          type: "string"
+        email:
+          type: "string"
+        firstName:
+          type: "string"
+        lastName:
+          type: "string"
+        createdAt:
+          $ref: "#/components/schemas/Instant"
+        updatedAt:
+          $ref: "#/components/schemas/Instant"
+    HashMap:
+      type: "object"
+      properties: {}

@@ -1,4 +1,4 @@
-package cz.klement.tools
+package cz.klement.plugins
 
 import com.auth0.jwt.interfaces.Payload
 import cz.klement.auth.getJwtVerifier

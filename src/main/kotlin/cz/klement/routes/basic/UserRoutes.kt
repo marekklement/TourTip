@@ -1,8 +1,10 @@
-package cz.klement.routes
+package cz.klement.routes.basic
 
 import cz.klement.mapper.command.mapCommand
 import cz.klement.model.request.UserCreateRequest
 import cz.klement.model.request.UserLoginRequest
+import cz.klement.routes.USERS_LOGIN
+import cz.klement.routes.USERS_PREFIX
 import cz.klement.service.api.UserService
 import io.ktor.http.*
 import io.ktor.server.application.*
