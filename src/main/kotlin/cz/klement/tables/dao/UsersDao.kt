@@ -7,6 +7,7 @@ import java.util.*
 
 interface UsersDao {
   fun get(userId: UUID): User?
+  fun getByUsername(searchUsername: String): User?
   fun findAll(): List<User>
   fun create(command: UserCreateCommand): UUID
   fun edit(command: UserUpdateCommand): User?

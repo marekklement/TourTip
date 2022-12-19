@@ -8,7 +8,6 @@ fun User.mapResponse() =
   UserResponse(
     id = id.value,
     username = username,
-    password = password,
     email = email,
     firstName = firstName,
     lastName = lastName,

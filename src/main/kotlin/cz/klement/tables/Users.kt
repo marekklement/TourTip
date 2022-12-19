@@ -1,6 +1,8 @@
 package cz.klement.tables
 
+import cz.klement.enums.UserRole
 import cz.klement.extensions.toLocalDateTime
+import cz.klement.extensions.toPrettyString
 import cz.klement.model.command.UserCreateCommand
 import cz.klement.model.command.UserUpdateCommand
 import cz.klement.tables.api.TableBase
@@ -17,15 +19,22 @@ import java.time.Instant
 import java.util.*
 
 object Users : TableBase("users"), UsersDao {
-  val username = varchar("username", length = 255)
+  val username = varchar("username", length = 255).uniqueIndex()
   val password = varchar("password", length = 255)
   val email = varchar("email", length = 255)
   val firstName = varchar("first_name", length = 255)
   val lastName = varchar("last_name", length = 255)
+  val roles = varchar("roles", length = 255)
 
   override fun get(userId: UUID) = transaction {
     User.find {
       Users.id eq userId
+    }.singleOrNull()
+  }
+
+  override fun getByUsername(searchUsername: String) = transaction {
+    User.find {
+      username eq searchUsername
     }.singleOrNull()
   }
 
@@ -43,6 +52,7 @@ object Users : TableBase("users"), UsersDao {
         it[lastName] = command.lastName
         it[createdAt] = now
         it[updatedAt] = now
+        it[roles] = listOf(UserRole.USER.toString()).toPrettyString()
       })[Users.id].value
     }
   }
@@ -50,7 +60,6 @@ object Users : TableBase("users"), UsersDao {
 
   override fun edit(command: UserUpdateCommand) = transaction {
     update({ Users.id eq command.id }) { user ->
-      command.username?.let { user[username] = it }
       command.email?.let { user[email] = it }
       command.firstName?.let { user[firstName] = it }
       command.lastName?.let { user[lastName] = it }
@@ -74,6 +83,7 @@ class User(id: EntityID<UUID>): UUIDEntity(id) {
   val email by Users.email
   val firstName by Users.firstName
   val lastName by Users.lastName
+  val roles by Users.roles
   val createdAt by Users.createdAt
   val updatedAt by Users.updatedAt
 }

@@ -4,7 +4,7 @@ import java.util.*
 
 data class UserUpdateCommand(
   val id: UUID,
-  val username: String?,
+  val password: String?,
   val email: String?,
   val firstName: String?,
   val lastName: String?

@@ -2,6 +2,7 @@ package cz.klement
 
 import cz.klement.plugins.configureRouting
 import cz.klement.plugins.configureSerialization
+import cz.klement.tools.configureAuthentication
 import cz.klement.tools.configureDatabase
 import cz.klement.tools.initInjections
 import io.ktor.server.application.*
@@ -14,11 +15,13 @@ fun main(args: Array<String>) {
     .start(wait = true)
 }
 
+@Suppress("unused")
 fun Application.module() {
   configureSerialization()
   configureDatabase()
   di {
     initInjections()
   }
+  configureAuthentication()
   configureRouting()
 }

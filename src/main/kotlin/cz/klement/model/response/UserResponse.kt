@@ -6,7 +6,6 @@ import java.util.*
 data class UserResponse(
   val id: UUID,
   val username: String,
-  val password: String,
   val email: String,
   val firstName: String,
   val lastName: String,

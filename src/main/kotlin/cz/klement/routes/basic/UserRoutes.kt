@@ -1,32 +1,23 @@
 package cz.klement.routes
 
-import cz.klement.extensions.toUUID
 import cz.klement.mapper.command.mapCommand
-import cz.klement.mapper.response.mapResponse
 import cz.klement.model.request.UserCreateRequest
+import cz.klement.model.request.UserLoginRequest
 import cz.klement.service.api.UserService
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.plugins.*
+import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.kodein.di.instance
 import org.kodein.di.ktor.closestDI
 
-fun Route.users() {
+fun Route.users(config: ApplicationConfig) {
 
   val userService by closestDI().instance<UserService>()
 
-  get("users") {
-    userService.findAll().map{
-      it.mapResponse()
-    }.also {
-      call.respond(it)
-    }
-  }
-
-  post("user") {
+  post(USERS_PREFIX) {
     call.receive<UserCreateRequest>().mapCommand()
       .run(userService::register)
       .also {
@@ -34,10 +25,13 @@ fun Route.users() {
       }
   }
 
-  delete("user/{id}") {
-    val id = call.parameters["id"]?.toUUID() ?: throw BadRequestException("Id was not provided in a path!")
-    userService.delete(id).also {
-      call.respond(HttpStatusCode.OK)
-    }
+  post(USERS_LOGIN) {
+    call.receive<UserLoginRequest>().mapCommand(config)
+      .run(userService::login)
+      .also {
+        call.respond(hashMapOf("token" to it))
+      }
   }
+
+
 }
