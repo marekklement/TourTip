@@ -11,6 +11,7 @@ import io.ktor.server.plugins.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.mindrot.jbcrypt.BCrypt
 import java.util.*
+import javax.naming.AuthenticationException
 
 class UserServiceImpl : UserService {
 
@@ -23,7 +24,7 @@ class UserServiceImpl : UserService {
   override fun login(command: UserLoginCommand) =
     Users.getByUsername(command.username)?.run {
       if (BCrypt.checkpw(command.password, password)) getJWTToken(config = command.config, user = this)
-      else null
+      else throw AuthenticationException("Authentication failed for user ${command.username}!")
     }
 
   override fun editUserDetails(command: UserUpdateCommand) = transaction {

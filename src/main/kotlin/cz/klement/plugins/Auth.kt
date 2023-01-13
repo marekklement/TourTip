@@ -7,6 +7,7 @@ import cz.klement.extensions.getJwtRealm
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import javax.naming.AuthenticationException
 
 const val USER_AUTH = "auth-jwt"
 const val ADMIN_AUTH = "auth-jwt-admin"
@@ -31,13 +32,13 @@ fun Application.configureAuthentication() {
   }
 }
 
-private fun validateRole(role: String, payload: Payload): JWTPrincipal? {
+private fun validateRole(role: String, payload: Payload): JWTPrincipal {
   val roles = payload.getClaim("roles").asString()
   val username = payload.getClaim("username").asString()
   return if (!roles.isNullOrEmpty() || !username.isNullOrEmpty()) {
     if (roles.contains(role)) {
       JWTPrincipal(payload)
-    } else null
-  } else null
+    } else throw AuthenticationException("User does not have role $role!")
+  } else throw AuthenticationException("User has no roles or Username was not found in token!")
 }
 
