@@ -1,19 +1,20 @@
 package cz.klement.tables
 
+import cz.klement.extensions.mapGame
 import cz.klement.extensions.toLocalDateTime
 import cz.klement.model.command.GameCreateCommand
 import cz.klement.model.command.GameUpdateCommand
+import cz.klement.model.command.SearchCommand
+import cz.klement.model.structures.PageResult
 import cz.klement.tables.api.TableBase
 import cz.klement.tables.dao.GamesDao
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 import java.time.Instant
 import java.util.*
 
@@ -34,6 +35,22 @@ object Games : TableBase("games"), GamesDao {
 
   override fun findAll(): List<Game> = transaction {
     Game.all().toList()
+  }
+
+  override fun search(command: SearchCommand): PageResult<Game> {
+    val totalCount = selectAll().count()
+    val content = this.let { if (command.where != null) it.select(command.where) else it.selectAll() }
+      .let { if (command.n != null) it.limit(n = command.n, offset = command.offset) else it }
+      .toList()
+      .map {
+        it.mapGame()
+      }
+    return PageResult(
+      content = content,
+      pageNumber = command.offset,
+      pageSize = command.n ?: content.size,
+      totalCount = totalCount
+    )
   }
 
   override fun create(command: GameCreateCommand) = transaction {
@@ -73,7 +90,7 @@ object Games : TableBase("games"), GamesDao {
 
 }
 
-class Game(id: EntityID<UUID>): UUIDEntity(id) {
+class Game(id: EntityID<UUID>) : UUIDEntity(id) {
   companion object : UUIDEntityClass<Game>(Games)
 
   val tournament by Tournament referencedOn Games.tournament

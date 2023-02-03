@@ -6,4 +6,5 @@ data class TournamentCreateCommand(
   val name: String,
   val startDate: Instant,
   val endDate: Instant,
+  val games: List<TournamentGameCreateCommand>
 )

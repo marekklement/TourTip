@@ -5,7 +5,7 @@ import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
 import java.time.Instant
 
-object InstantAdapter: TypeAdapter<Instant>() {
+object InstantAdapter : TypeAdapter<Instant>() {
 
   override fun write(writer: JsonWriter, value: Instant?) {
     runCatching {

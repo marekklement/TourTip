@@ -1,18 +1,19 @@
 package cz.klement.tables
 
+import cz.klement.extensions.mapWinner
 import cz.klement.extensions.toLocalDateTime
+import cz.klement.model.command.SearchCommand
 import cz.klement.model.command.WinnerCreateCommand
 import cz.klement.model.command.WinnerUpdateCommand
+import cz.klement.model.structures.PageResult
 import cz.klement.tables.api.TableBase
 import cz.klement.tables.dao.WinnersDao
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 import java.time.Instant
 import java.util.*
 
@@ -31,6 +32,22 @@ object Winners : TableBase("winners"), WinnersDao {
 
   override fun findAll(): List<Winner> = transaction {
     Winner.all().toList()
+  }
+
+  override fun search(command: SearchCommand): PageResult<Winner> {
+    val totalCount = selectAll().count()
+    val content = this.let { if (command.where != null) it.select(command.where) else it.selectAll() }
+      .let { if (command.n != null) it.limit(n = command.n, offset = command.offset) else it }
+      .toList()
+      .map {
+        it.mapWinner()
+      }
+    return PageResult(
+      content = content,
+      pageNumber = command.offset,
+      pageSize = command.n ?: content.size,
+      totalCount = totalCount
+    )
   }
 
   override fun create(command: WinnerCreateCommand) = transaction {
@@ -61,7 +78,7 @@ object Winners : TableBase("winners"), WinnersDao {
   }
 }
 
-class Winner(id: EntityID<UUID>): UUIDEntity(id) {
+class Winner(id: EntityID<UUID>) : UUIDEntity(id) {
   companion object : UUIDEntityClass<Winner>(Winners)
 
   val user by User optionalReferencedOn Winners.user

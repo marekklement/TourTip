@@ -1,19 +1,20 @@
 package cz.klement.tables
 
+import cz.klement.extensions.mapTournament
 import cz.klement.extensions.toLocalDateTime
+import cz.klement.model.command.SearchCommand
 import cz.klement.model.command.TournamentCreateCommand
 import cz.klement.model.command.TournamentUpdateCommand
+import cz.klement.model.structures.PageResult
 import cz.klement.tables.api.TableBase
 import cz.klement.tables.dao.TournamentsDao
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.javatime.datetime
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 import java.time.Instant
 import java.util.*
 
@@ -59,9 +60,37 @@ object Tournaments : TableBase("tournaments"), TournamentsDao {
     deleteWhere { (id eq tournamentId) } > 0
   }
 
+  override fun search(command: SearchCommand): PageResult<Tournament> {
+    val totalCount = selectAll().count()
+    val content = this.let { if (command.where != null) it.select(command.where) else it.selectAll() }
+      .let { if (command.n != null) it.limit(n = command.n, offset = command.offset) else it }
+      .toList()
+      .map {
+        it.mapTournament()
+      }
+    return PageResult(
+      content = content,
+      pageNumber = command.offset,
+      pageSize = command.n ?: content.size,
+      totalCount = totalCount
+    )
+  }
+
+  fun getSearch(command: SearchCommand) = getSearch(command) { this }
+
+  private fun getSearch(command: SearchCommand, queryMutation: Query.() -> Query) = transaction {
+    Tournaments.let { if (command.where != null) it.select(command.where) else it.selectAll() }
+      .queryMutation()
+      .let { if (command.n != null) it.limit(n = command.n, offset = command.offset) else it }
+      .toList()
+      .map {
+        it.mapTournament()
+      }
+  }
+
 }
 
-class Tournament(id: EntityID<UUID>): UUIDEntity(id) {
+class Tournament(id: EntityID<UUID>) : UUIDEntity(id) {
   companion object : UUIDEntityClass<Tournament>(Tournaments)
 
   var name by Tournaments.name

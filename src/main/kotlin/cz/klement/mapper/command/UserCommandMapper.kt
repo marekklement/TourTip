@@ -1,5 +1,6 @@
 package cz.klement.mapper.command
 
+import cz.klement.exception.UnhandledMappingValidationException
 import cz.klement.extensions.hashPassword
 import cz.klement.extensions.toPrettyString
 import cz.klement.model.command.UserCreateCommand
@@ -11,24 +12,24 @@ import cz.klement.model.request.UserPasswordChangeRequest
 import cz.klement.model.request.UserUpdateRequest
 import io.ktor.server.config.*
 import io.ktor.server.plugins.*
-import java.util.UUID
+import java.util.*
 
 fun UserCreateRequest.mapCommand() =
   checkValidity(this).run {
     UserCreateCommand(
-      email = email ?: "",
-      password = password?.hashPassword() ?: "",
-      username = username ?: "",
-      firstName = firstName ?: "",
-      lastName = lastName ?: "",
+      email = email ?: throw UnhandledMappingValidationException(),
+      password = password?.hashPassword() ?: throw UnhandledMappingValidationException(),
+      username = username ?: throw UnhandledMappingValidationException(),
+      firstName = firstName ?: throw UnhandledMappingValidationException(),
+      lastName = lastName ?: throw UnhandledMappingValidationException(),
     )
   }
 
 fun UserLoginRequest.mapCommand(config: ApplicationConfig) =
   checkValidity(this).run {
     UserLoginCommand(
-      username = username ?: "",
-      password = password ?: "",
+      username = username ?: throw UnhandledMappingValidationException(),
+      password = password ?: throw UnhandledMappingValidationException(),
       config = config
     )
   }

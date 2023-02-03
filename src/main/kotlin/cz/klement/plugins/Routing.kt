@@ -1,6 +1,7 @@
 package cz.klement.plugins
 
 import cz.klement.routes.API_PREFIX
+import cz.klement.routes.admin.tournamentAdmin
 import cz.klement.routes.basic.users
 import cz.klement.routes.usersAdmin
 import cz.klement.routes.usersAuth
@@ -26,6 +27,7 @@ fun Application.configureRouting() {
       }
       authenticate(ADMIN_AUTH) {
         usersAdmin()
+        tournamentAdmin()
       }
     }
     swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")

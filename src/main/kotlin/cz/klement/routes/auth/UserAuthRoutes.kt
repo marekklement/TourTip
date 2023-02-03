@@ -19,7 +19,7 @@ fun Route.usersAuth() {
   val userService by closestDI().instance<UserService>()
 
   get(USERS_PREFIX) {
-    userService.findAll().map{
+    userService.findAll().map {
       it.mapResponse()
     }.also {
       call.respond(it)

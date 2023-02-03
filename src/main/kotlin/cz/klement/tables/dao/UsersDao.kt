@@ -1,7 +1,9 @@
 package cz.klement.tables.dao
 
+import cz.klement.model.command.SearchCommand
 import cz.klement.model.command.UserCreateCommand
 import cz.klement.model.command.UserUpdateCommand
+import cz.klement.model.structures.PageResult
 import cz.klement.tables.User
 import java.util.*
 
@@ -12,4 +14,5 @@ interface UsersDao {
   fun create(command: UserCreateCommand): UUID
   fun edit(command: UserUpdateCommand): User?
   fun delete(userId: UUID): Boolean
+  fun search(command: SearchCommand): PageResult<User>
 }
