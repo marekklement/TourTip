@@ -6,6 +6,8 @@ val psqlDriverVersion: String by project
 val flywayVersion: String by project
 val kodeinVersion: String by project
 val cryptoVersion: String by project
+val swaggerForstVersion: String by project
+val jacksonDataType: String by project
 
 plugins {
   application
@@ -29,13 +31,14 @@ repositories {
 
 dependencies {
   implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
-  implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktorVersion")
+  implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
   implementation("io.ktor:ktor-serialization-gson:$ktorVersion")
   implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktorVersion")
   implementation("io.ktor:ktor-server-cors:$ktorVersion")
   implementation("io.ktor:ktor-server-auth:$ktorVersion")
   implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
-  implementation("io.ktor:ktor-server-swagger:$ktorVersion")
+  implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
+  implementation("dev.forst:ktor-openapi-generator:0.6.1")
   implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
   implementation("ch.qos.logback:logback-classic:$logbackVersion")
   testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
@@ -48,4 +51,5 @@ dependencies {
   implementation("org.flywaydb:flyway-core:$flywayVersion")
   implementation("org.kodein.di:kodein-di-framework-ktor-server-jvm:$kodeinVersion")
   implementation("org.mindrot:jbcrypt:$cryptoVersion")
+  implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonDataType")
 }

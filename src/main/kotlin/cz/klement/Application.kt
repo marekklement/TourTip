@@ -1,11 +1,7 @@
 package cz.klement
 
-import cz.klement.plugins.configureAuthentication
-import cz.klement.plugins.configureCors
-import cz.klement.plugins.configureRouting
-import cz.klement.plugins.configureSerialization
+import cz.klement.plugins.*
 import cz.klement.tools.configureDatabase
-import cz.klement.tools.initInjections
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -18,6 +14,7 @@ fun main(args: Array<String>) {
 
 @Suppress("unused")
 fun Application.module() {
+  configureOpenApi()
   configureSerialization()
   configureDatabase()
   di {

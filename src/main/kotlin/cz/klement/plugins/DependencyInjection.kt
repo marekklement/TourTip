@@ -1,14 +1,17 @@
-package cz.klement.tools
+package cz.klement.plugins
 
-import cz.klement.service.api.TournamentService
-import cz.klement.service.api.UserService
-import cz.klement.service.impl.TournamentServiceImpl
-import cz.klement.service.impl.UserServiceImpl
+import cz.klement.service.api.*
+import cz.klement.service.impl.*
 import org.kodein.di.DI
 import org.kodein.di.bind
+import org.kodein.di.instance
 import org.kodein.di.singleton
 
 fun DI.MainBuilder.initInjections() {
   bind<UserService>() with singleton { UserServiceImpl() }
-  bind<TournamentService>() with singleton { TournamentServiceImpl() }
+  bind<GameService>() with singleton { GameServiceImpl() }
+  bind<WinnerService>() with singleton { WinnerServiceImpl() }
+  bind<TeamService>() with singleton { TeamServiceImpl() }
+  bind<PredictionService>() with singleton { PredictionServiceImpl() }
+  bind<TournamentService>() with singleton { TournamentServiceImpl(instance()) }
 }

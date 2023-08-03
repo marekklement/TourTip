@@ -10,6 +10,7 @@ import java.util.*
 interface GamesDao {
   fun get(gameId: UUID): Game?
   fun findAll(): List<Game>
+  fun findAllForTournament(id: UUID): List<Game>
   fun create(command: GameCreateCommand): UUID
   fun edit(command: GameUpdateCommand): Game?
   fun delete(gameId: UUID): Boolean

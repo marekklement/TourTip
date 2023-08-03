@@ -10,6 +10,8 @@ import cz.klement.tables.User
 import io.ktor.server.config.*
 import java.util.*
 
+var verifier: JWTVerifier? = null
+
 fun getJWTToken(config: ApplicationConfig, user: User): String {
   return JWT.create()
     .withAudience(config.getJwtAudience())
@@ -20,8 +22,11 @@ fun getJWTToken(config: ApplicationConfig, user: User): String {
     .sign(Algorithm.HMAC256(config.getJwtSecret()))
 }
 
-fun getJwtVerifier(config: ApplicationConfig): JWTVerifier =
-  JWT.require(Algorithm.HMAC256(config.getJwtSecret()))
+fun getJwtVerifier(config: ApplicationConfig): JWTVerifier {
+  return verifier ?: JWT.require(Algorithm.HMAC256(config.getJwtSecret()))
     .withAudience(config.getJwtAudience())
     .withIssuer(config.getJwtIssuer())
     .build()
+    .also { verifier = it }
+}
+

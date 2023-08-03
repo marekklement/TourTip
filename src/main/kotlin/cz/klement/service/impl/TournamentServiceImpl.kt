@@ -3,20 +3,21 @@ package cz.klement.service.impl
 import cz.klement.mapper.command.mapCommand
 import cz.klement.model.command.TournamentCreateCommand
 import cz.klement.model.command.TournamentUpdateCommand
+import cz.klement.service.api.GameService
 import cz.klement.service.api.TournamentService
-import cz.klement.tables.Games
 import cz.klement.tables.Tournament
 import cz.klement.tables.Tournaments
 import io.ktor.server.plugins.*
 import java.util.*
 
-class TournamentServiceImpl : TournamentService {
+class TournamentServiceImpl(
+  private val gameService: GameService
+) : TournamentService {
 
   override fun create(command: TournamentCreateCommand) =
     Tournaments.create(command).run {
       command.games.forEach {
-        // todo change to GameService when implemented
-        Games.create(it.mapCommand(this))
+        gameService.create(it.mapCommand(this))
       }
       get(this)
     }

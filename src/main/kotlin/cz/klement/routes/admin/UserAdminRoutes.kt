@@ -1,23 +1,37 @@
-package cz.klement.routes
+package cz.klement.routes.admin
 
-import cz.klement.extensions.toUUID
+import com.papsign.ktor.openapigen.route.application
+import com.papsign.ktor.openapigen.route.info
+import com.papsign.ktor.openapigen.route.path.normal.NormalOpenAPIRoute
+import com.papsign.ktor.openapigen.route.path.auth.delete
+import com.papsign.ktor.openapigen.route.response.respond
+import com.papsign.ktor.openapigen.route.route
+import com.papsign.ktor.openapigen.route.tags
+import cz.klement.enums.SwaggerTags
+import cz.klement.model.param.IdParam
+import cz.klement.plugins.adminTokenAuthorized
+import cz.klement.routes.USERS_BY_ID
 import cz.klement.service.api.UserService
 import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.plugins.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.server.auth.jwt.*
 import org.kodein.di.instance
 import org.kodein.di.ktor.closestDI
 
-fun Route.usersAdmin() {
+fun NormalOpenAPIRoute.usersAdmin() {
+  with(application) {
+    val userService by closestDI().instance<UserService>()
 
-  val userService by closestDI().instance<UserService>()
-
-  delete(USERS_BY_ID) {
-    val id = call.parameters["id"]?.toUUID() ?: throw BadRequestException("Id was not provided in a path!")
-    userService.delete(id).also {
-      call.respond(HttpStatusCode.OK)
+    adminTokenAuthorized {
+      route(USERS_BY_ID).delete<IdParam, HttpStatusCode, JWTPrincipal> (
+        info(
+          summary = "Delete user"
+        ),
+        tags(SwaggerTags.USERS)
+      ){ params ->
+        userService.delete(params.id)
+        respond(HttpStatusCode.OK)
+      }
     }
+
   }
 }

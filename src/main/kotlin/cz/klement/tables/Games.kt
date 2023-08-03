@@ -20,8 +20,8 @@ import java.util.*
 
 object Games : TableBase("games"), GamesDao {
   val tournament = reference("tournament_id", Tournaments)
-  val homeTeam = reference("home_team_id", Teams).nullable()
-  val awayTeam = reference("away_team_id", Teams).nullable()
+  val homeTeam = reference("home_team_id", Teams)
+  val awayTeam = reference("away_team_id", Teams)
   val startTime = datetime("start_time")
   val homeScore = integer("home_score").nullable()
   val awayScore = integer("away_score").nullable()
@@ -36,6 +36,8 @@ object Games : TableBase("games"), GamesDao {
   override fun findAll(): List<Game> = transaction {
     Game.all().toList()
   }
+
+  override fun findAllForTournament(tournamentId: UUID): List<Game> = Game.find { tournament eq tournamentId }.toList()
 
   override fun search(command: SearchCommand): PageResult<Game> {
     val totalCount = selectAll().count()
@@ -71,9 +73,6 @@ object Games : TableBase("games"), GamesDao {
 
   override fun edit(command: GameUpdateCommand) = transaction {
     update({ Games.id eq command.id }) { game ->
-      command.tournamentId?.let { game[tournament] = it }
-      command.homeTeamId?.let { game[homeTeam] = it }
-      command.awayTeamId?.let { game[awayTeam] = it }
       command.startTime?.let { game[startTime] = it.toLocalDateTime() }
       command.homeScore?.let { game[homeScore] = it }
       command.awayScore?.let { game[awayScore] = it }
@@ -94,8 +93,8 @@ class Game(id: EntityID<UUID>) : UUIDEntity(id) {
   companion object : UUIDEntityClass<Game>(Games)
 
   val tournament by Tournament referencedOn Games.tournament
-  val homeTeam by Team optionalReferencedOn Games.homeTeam
-  val awayTeam by Team optionalReferencedOn Games.awayTeam
+  val homeTeam by Team referencedOn Games.homeTeam
+  val awayTeam by Team referencedOn Games.awayTeam
   val startTime by Games.startTime
   val homeScore by Games.homeScore
   val awayScore by Games.awayScore
