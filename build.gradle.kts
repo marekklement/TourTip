@@ -8,6 +8,8 @@ val kodeinVersion: String by project
 val cryptoVersion: String by project
 val swaggerForstVersion: String by project
 val jacksonDataType: String by project
+val objenesisVersion: String by project
+val loggingVersion: String by project
 
 plugins {
   application
@@ -52,4 +54,6 @@ dependencies {
   implementation("org.kodein.di:kodein-di-framework-ktor-server-jvm:$kodeinVersion")
   implementation("org.mindrot:jbcrypt:$cryptoVersion")
   implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonDataType")
+  api("org.objenesis:objenesis:$objenesisVersion")
+  api("io.github.microutils:kotlin-logging-jvm:$loggingVersion")
 }

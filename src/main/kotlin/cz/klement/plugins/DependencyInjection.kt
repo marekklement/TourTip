@@ -12,6 +12,7 @@ fun DI.MainBuilder.initInjections() {
   bind<GameService>() with singleton { GameServiceImpl() }
   bind<WinnerService>() with singleton { WinnerServiceImpl() }
   bind<TeamService>() with singleton { TeamServiceImpl() }
+  bind<SettingsKeyValueService>() with singleton { SettingsKeyValueServiceImpl() }
   bind<PredictionService>() with singleton { PredictionServiceImpl() }
   bind<TournamentService>() with singleton { TournamentServiceImpl(instance()) }
 }

@@ -23,4 +23,5 @@ fun Application.module() {
   configureAuthentication()
   configureRouting()
   configureCors()
+  initData()
 }

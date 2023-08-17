@@ -2,7 +2,9 @@ package cz.klement.plugins
 
 import com.papsign.ktor.openapigen.route.apiRouting
 import com.papsign.ktor.openapigen.route.route
-import cz.klement.routes.API_PREFIX
+import cz.klement.constants.API_PREFIX
+import cz.klement.routes.admin.settingsAdmin
+import cz.klement.routes.admin.teamsAdmin
 import cz.klement.routes.admin.tournamentAdmin
 import cz.klement.routes.basic.users
 import cz.klement.routes.admin.usersAdmin
@@ -16,7 +18,9 @@ fun Application.configureRouting() {
       users()
       usersAuth()
       usersAdmin()
+      teamsAdmin()
       tournamentAdmin()
+      settingsAdmin()
     }
 
   }

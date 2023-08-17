@@ -7,8 +7,8 @@ import com.papsign.ktor.openapigen.route.path.normal.post
 import cz.klement.mapper.command.mapCommand
 import cz.klement.model.request.UserCreateRequest
 import cz.klement.model.request.UserLoginRequest
-import cz.klement.routes.USERS_LOGIN
-import cz.klement.routes.USERS_PREFIX
+import cz.klement.constants.USERS_LOGIN
+import cz.klement.constants.USERS_PREFIX
 import cz.klement.service.api.UserService
 import io.ktor.http.*
 import org.kodein.di.instance
@@ -31,7 +31,7 @@ fun NormalOpenAPIRoute.users() {
       ){ _, request ->
         request.mapCommand()
           .run(userService::register)
-        respond(HttpStatusCode.Accepted)
+        respond(HttpStatusCode.Created)
       }
     }
 
@@ -48,7 +48,7 @@ fun NormalOpenAPIRoute.users() {
           UserLoginResponse(
             token = it
           )
-        }.run { respond(this) }
+        }.also { respond(it) }
     }
   }
 

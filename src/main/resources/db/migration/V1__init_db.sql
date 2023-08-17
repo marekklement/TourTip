@@ -1,7 +1,7 @@
 -- Create the Teams table
 CREATE TABLE teams (
                        id uuid PRIMARY KEY,
-                       name VARCHAR(255) NOT NULL,
+                       name VARCHAR(255) NOT NULL UNIQUE,
                        created_at TIMESTAMP NOT NULL,
                        updated_at TIMESTAMP NOT NULL
 );
@@ -63,3 +63,48 @@ CREATE TABLE winners (
                          created_at TIMESTAMP NOT NULL,
                          updated_at TIMESTAMP NOT NULL
 );
+
+-- Create the Settings table
+CREATE TABLE settings_key_value (
+                                  id uuid PRIMARY KEY,
+                                  key VARCHAR(255) NOT NULL,
+                                  type VARCHAR(50) NOT NULL,
+                                  value VARCHAR(255) NULL,
+                                  created_at TIMESTAMP NOT NULL,
+                                  updated_at TIMESTAMP NOT NULL
+);
+
+-- Add foreign key to the Games table referencing Tournaments
+ALTER TABLE games
+  ADD CONSTRAINT fk_games_tournament
+    FOREIGN KEY (tournament_id) REFERENCES tournaments(id);
+
+-- Add foreign keys to the Games table referencing Teams
+ALTER TABLE games
+  ADD CONSTRAINT fk_games_home_team
+    FOREIGN KEY (home_team_id) REFERENCES teams(id);
+
+ALTER TABLE games
+  ADD CONSTRAINT fk_games_away_team
+    FOREIGN KEY (away_team_id) REFERENCES teams(id);
+
+-- Add foreign key to the Predictions table referencing Users
+ALTER TABLE predictions
+  ADD CONSTRAINT fk_predictions_user
+    FOREIGN KEY (user_id) REFERENCES users(id);
+
+-- Add foreign key to the Predictions table referencing Games
+ALTER TABLE predictions
+  ADD CONSTRAINT fk_predictions_game
+    FOREIGN KEY (game_id) REFERENCES games(id);
+
+-- Add foreign key to the Winners table referencing Users
+ALTER TABLE winners
+  ADD CONSTRAINT fk_winners_user
+    FOREIGN KEY (user_id) REFERENCES users(id);
+
+-- Add foreign key to the Winners table referencing Tournaments
+ALTER TABLE winners
+  ADD CONSTRAINT fk_winners_tournament
+    FOREIGN KEY (tournament_id) REFERENCES tournaments(id);
+

@@ -11,3 +11,4 @@ fun ApplicationConfig.getJwtSecret() = property("jwt.secret").getString()
 fun ApplicationConfig.getJwtIssuer() = property("jwt.issuer").getString()
 fun ApplicationConfig.getJwtAudience() = property("jwt.audience").getString()
 fun ApplicationConfig.getJwtRealm() = property("jwt.realm").getString()
+fun ApplicationConfig.getJwtExpirationInMillis() = property("jwt.expiration-in-millis").getString().toLongOrNull() ?: 86400000 // default 24 hours

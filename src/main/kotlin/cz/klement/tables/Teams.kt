@@ -18,7 +18,7 @@ import java.time.Instant
 import java.util.*
 
 object Teams : TableBase("teams"), TeamsDao {
-  val name = varchar("name", length = 255)
+  val name = varchar("name", length = 255).uniqueIndex()
 
   override fun get(teamId: UUID) = transaction {
     Team.find {

@@ -10,7 +10,7 @@ import com.papsign.ktor.openapigen.route.tags
 import cz.klement.enums.SwaggerTags
 import cz.klement.model.param.IdParam
 import cz.klement.plugins.adminTokenAuthorized
-import cz.klement.routes.USERS_BY_ID
+import cz.klement.constants.USERS_BY_ID
 import cz.klement.service.api.UserService
 import io.ktor.http.*
 import io.ktor.server.auth.jwt.*
@@ -29,7 +29,7 @@ fun NormalOpenAPIRoute.usersAdmin() {
         tags(SwaggerTags.USERS)
       ){ params ->
         userService.delete(params.id)
-        respond(HttpStatusCode.OK)
+        respond(HttpStatusCode.NoContent)
       }
     }
 

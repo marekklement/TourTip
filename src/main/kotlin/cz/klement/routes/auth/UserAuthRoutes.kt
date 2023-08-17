@@ -16,9 +16,9 @@ import cz.klement.model.request.UserPasswordChangeRequest
 import cz.klement.model.request.UserUpdateRequest
 import cz.klement.model.response.UserResponse
 import cz.klement.plugins.userTokenAuthorized
-import cz.klement.routes.USERS_BY_ID
-import cz.klement.routes.USERS_BY_ID_PWD_CHANGE
-import cz.klement.routes.USERS_PREFIX
+import cz.klement.constants.USERS_BY_ID
+import cz.klement.constants.USERS_BY_ID_PWD_CHANGE
+import cz.klement.constants.USERS_PREFIX
 import cz.klement.service.api.UserService
 import io.ktor.server.auth.jwt.*
 import org.kodein.di.instance

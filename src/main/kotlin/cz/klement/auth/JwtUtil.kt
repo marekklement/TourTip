@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import cz.klement.extensions.getJwtAudience
+import cz.klement.extensions.getJwtExpirationInMillis
 import cz.klement.extensions.getJwtIssuer
 import cz.klement.extensions.getJwtSecret
 import cz.klement.tables.User
@@ -18,7 +19,7 @@ fun getJWTToken(config: ApplicationConfig, user: User): String {
     .withIssuer(config.getJwtIssuer())
     .withClaim("username", user.username)
     .withClaim("roles", user.roles)
-    .withExpiresAt(Date(System.currentTimeMillis() + 86400000))
+    .withExpiresAt(Date(System.currentTimeMillis() + config.getJwtExpirationInMillis()))
     .sign(Algorithm.HMAC256(config.getJwtSecret()))
 }
 
